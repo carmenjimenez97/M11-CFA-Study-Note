@@ -1,0 +1,63 @@
+
+name: Render CFA Study Note
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "M11-CFA-Study-Note.qmd"
+      - "SAQ.sav"
+      - ".github/workflows/render-quarto.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Install R packages
+        run: |
+          Rscript -e 'install.packages(c("haven", "lavaan", "knitr", "rmarkdown"))'
+
+      - name: Add project links
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("M11-CFA-Study-Note.qmd")
+          s = p.read_text(encoding="utf-8")
+          s = s.replace(
+              "REPLACE_WITH_GITHUB_REPOSITORY_URL",
+              "https://github.com/carmenjimenez97/M11-CFA-Study-Note"
+          )
+          s = s.replace(
+              "REPLACE_WITH_GITHUB_PAGES_URL",
+              "https://carmenjimenez97.github.io/M11-CFA-Study-Note/"
+          )
+          p.write_text(s, encoding="utf-8")
+          PY
+
+      - name: Render HTML
+        run: |
+          quarto render M11-CFA-Study-Note.qmd --to html --output index.html
+
+      - name: Save generated files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add M11-CFA-Study-Note.qmd index.html
+          git diff --cached --quiet || git commit -m "Render CFA study note"
+          git push
