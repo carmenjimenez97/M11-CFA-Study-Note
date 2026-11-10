@@ -515,5 +515,5 @@ UCLA Statistical Consulting Group. (n.d.). *Confirmatory Factor Analysis (CFA) i
 
 ## Project Links
 
-- [GitHub Repository](REPLACE_WITH_GITHUB_REPOSITORY_URL)
-- [GitHub Pages Website](REPLACE_WITH_GITHUB_PAGES_URL)
+- [GitHub Repository](https://github.com/carmenjimenez97/M11-CFA-Study-Note)
+- [GitHub Pages Website](https://carmenjimenez97.github.io/M11-CFA-Study-Note/)
